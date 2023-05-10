@@ -33,30 +33,54 @@ const FormPost = () => {
   ));
 
   return (
-    <section>
-      <h2>Add a New Post</h2>
-      <form>
-        <label htmlFor="postTitle">Post Title:</label>
-        <input
-          type="text"
-          id="postTitle"
-          name="postTitle"
-          value={title}
-          onChange={onTitleChanged}
-        />
-        <label htmlFor="postAuthor">Author:</label>
-        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
-          <option value=""></option>
-          {usersOptions}
-        </select>
-        <label htmlFor="postContent">Content:</label>
-        <textarea
-          id="postContent"
-          name="postContent"
-          value={content}
-          onChange={onContentChanged}
-        />
-        <button type="button" onClick={onSavePostClicked} disabled={!canSave}>
+    <section className="flex flex-col gap-1">
+      <h1 className="text-xl text-center mt-2">Add a New Post</h1>
+      <form className="flex flex-col gap-1">
+        <div className="input-control">
+          <label htmlFor="postTitle" className="mr-2">
+            Post Title:
+          </label>
+          <input
+            type="text"
+            id="postTitle"
+            name="postTitle"
+            value={title}
+            onChange={onTitleChanged}
+            className="input"
+          />
+        </div>
+        <div className="input-control">
+          <label htmlFor="postAuthor" className="mr-2">
+            Author:
+          </label>
+          <select
+            id="postAuthor"
+            value={userId}
+            onChange={onAuthorChanged}
+            className="input select"
+          >
+            <option value=""></option>
+            {usersOptions}
+          </select>
+        </div>
+        <div className="input-control">
+          <label htmlFor="postContent" className="mr-2">
+            Content:
+          </label>
+          <textarea
+            id="postContent"
+            name="postContent"
+            value={content}
+            onChange={onContentChanged}
+            className="input"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={onSavePostClicked}
+          disabled={!canSave}
+          className="mx-auto w-50"
+        >
           Save Post
         </button>
       </form>

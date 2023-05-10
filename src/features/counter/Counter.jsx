@@ -19,23 +19,43 @@ const Counter = () => {
   };
 
   return (
-    <section>
-      <p>{count}</p>
+    <section className="flex flex-col justify-center gap-1">
+      <p className="text-2xl text-center">{count}</p>
 
-      <div>
-        <button onClick={() => dispatch(increament())}>+</button>
-        <button onClick={() => dispatch(decreament())}>-</button>
-
+      <div className="flex flex-col gap-1 items-center">
+        <div>
+          <button
+            onClick={() => dispatch(increament())}
+            className="p-1 text-xl w-20 h-20"
+          >
+            +
+          </button>
+          <button
+            onClick={() => dispatch(decreament())}
+            className="p-1 text-xl w-20 h-20"
+          >
+            -
+          </button>
+        </div>
+        <br />
         <input
           type="text"
           value={increamentAmt}
           onChange={(e) => setIncreamentAmt(e.target.value)}
-          placeholder="Inc by amount"
+          className="p-2"
         />
-        <button onClick={() => dispatch(increamentByAmount(addValue))}>
-          Add amount
-        </button>
-        <button onClick={() => dispatch(resetAll)}>reset</button>
+        <br />
+        <div className="flex gap-1">
+          <button
+            className="p-2"
+            onClick={() => dispatch(increamentByAmount(addValue))}
+          >
+            Add amount
+          </button>
+          <button className="p-2" onClick={() => dispatch(resetAll)}>
+            reset
+          </button>
+        </div>
       </div>
     </section>
   );
