@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost } from "./postSclice";
+import { addNewPost } from "./postSlice";
 import { selectAllUser } from "../users/userSlice";
 
 const FormPost = () => {
   const dispatch = useDispatch();
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -16,15 +17,25 @@ const FormPost = () => {
   const onContentChanged = (e) => setContent(e.target.value);
   const onAuthorChanged = (e) => setUserId(e.target.value);
 
+  const canSave =
+    [title, content, userId].every(Boolean) && addRequestStatus === "idle";
+
   const onSavePostClicked = () => {
-    if (title && content) {
-      dispatch(addPost(title, content, userId));
-      setTitle("");
-      setContent("");
+    if (canSave) {
+      try {
+        setAddRequestStatus("pending");
+        dispatch(addNewPost({ title, body: content, userId })).unwrap();
+
+        setTitle("");
+        setContent("");
+        setUserId("");
+      } catch (error) {
+        console.error("failed to save the post", error);
+      } finally {
+        setAddRequestStatus("idle");
+      }
     }
   };
-
-  const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
 
   const usersOptions = users.map((user) => (
     <option key={user.id} value={user.id}>
@@ -36,7 +47,7 @@ const FormPost = () => {
     <section className="flex flex-col gap-1">
       <h1 className="text-xl text-center mt-2">Add a New Post</h1>
       <form className="flex flex-col gap-1">
-        <div className="input-control">
+        <div className="input-control flex flex-col w-full">
           <label htmlFor="postTitle" className="mr-2">
             Post Title:
           </label>
@@ -46,10 +57,10 @@ const FormPost = () => {
             name="postTitle"
             value={title}
             onChange={onTitleChanged}
-            className="input"
+            className="input w-full"
           />
         </div>
-        <div className="input-control">
+        <div className="input-control flex flex-col w-full">
           <label htmlFor="postAuthor" className="mr-2">
             Author:
           </label>
@@ -57,13 +68,13 @@ const FormPost = () => {
             id="postAuthor"
             value={userId}
             onChange={onAuthorChanged}
-            className="input select"
+            className="input select w-full"
           >
             <option value=""></option>
             {usersOptions}
           </select>
         </div>
-        <div className="input-control">
+        <div className="input-control flex flex-col w-full">
           <label htmlFor="postContent" className="mr-2">
             Content:
           </label>
@@ -72,7 +83,7 @@ const FormPost = () => {
             name="postContent"
             value={content}
             onChange={onContentChanged}
-            className="input"
+            className="input w-full"
           />
         </div>
         <button

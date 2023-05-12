@@ -1,36 +1,41 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectAllPost } from "./postSclice";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchPost,
+  getPostError,
+  getPostStatus,
+  selectAllPost,
+} from "./postSlice";
 import FormPost from "./FormPost";
-import PostAuthor from "./PostAuthor";
-import TimeAgo from "./TimeAgo";
-import ReactionButtons from "./ReactionButtons";
+import PostSingle from "./PostSingle";
 
 const PostsList = () => {
   const posts = useSelector(selectAllPost);
+  const status = useSelector(getPostStatus);
+  const error = useSelector(getPostError);
+  const dispatch = useDispatch();
 
-  let orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date));
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchPost());
+    }
+  }, [status, dispatch]);
 
-  const rederedPost = orderedPosts.map((post) => (
-    <article key={post.id} className="card mt-3 p-2">
-      <strong>
-        <h2>{post.title}</h2>
-      </strong>
-      <p className="mt-2">{post.content.substring(0, 100)}</p>
-      <div>
-        <PostAuthor userId={post.userId} />
-        <TimeAgo timestamps={post.date} />
-      </div>
-      <ReactionButtons post={post} />
-    </article>
-  ));
+  let content;
+  if (status === "laoding") content = <p>Loading...</p>;
+  else if (status === "succeeded") {
+    let orderedPosts = posts
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date));
+    content = orderedPosts.map((post, i) => <PostSingle key={i} post={post} />);
+  } else if (status === "failed") content = <p>{error}</p>;
 
   return (
     <section className="flex flex-col gap-2 pb-4">
       <FormPost />
       <div>
         <h2>Posts</h2>
-        {rederedPost}
+        {content}
       </div>
     </section>
   );

@@ -9,8 +9,8 @@ button {
 }
 
 .container {
-  width: 1000px;
-  max-width: 90%;
+  width: 90%;
+  max-width: 600px;
   margin: auto;
 }
 
@@ -125,7 +125,8 @@ button {
 }
 
 .input {
-  width: 90%;
+  min-width: 600px;
+  max-width: 90%;
   border: 1px solid rgb(165, 165, 165);
   margin-top: 1rem;
   border-radius: 5px;
